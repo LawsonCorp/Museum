@@ -2,6 +2,7 @@ import frame from "./assets/images/frame.png";
 import hercules1Crop from "./assets/images/hercules1-crop.jpg";
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
+import { IoArrowBackCircleOutline } from "react-icons/io5";
 import "./App.css";
 
 function App() {
@@ -10,6 +11,7 @@ function App() {
 	const hero = useRef(null);
 	const expo = useRef(null);
 	const paint = useRef(null);
+	const backButton = useRef(null);
 
 	const [data, setData] = useState([]);
 	const [wallTitle, setWallTitle] = useState("");
@@ -53,8 +55,27 @@ function App() {
 				"app__expo-container_title-paint"
 			);
 
-			if (expos && expo.current && exposPicker && expoTitle) {
+			if (
+				expos &&
+				expo.current &&
+				exposPicker &&
+				expoTitle &&
+				backButton.current
+			) {
 				const expoElement = expo.current;
+				const backButtonElement = backButton.current;
+
+				backButtonElement.addEventListener("click", () => {
+					for (let x = 0; x < expos.length; x++) {
+						expoElement.style.display = "block";
+						backButtonElement.style.display = "none";
+						setTimeout(() => {
+							expos[x].classList.remove("turned");
+							expos[x].style.opacity = 1;
+							expoElement.style.opacity = 1;
+						}, 1000);
+					}
+				});
 
 				for (let y = 0; y < expos.length; y++) {
 					const expoPaint = document
@@ -70,6 +91,7 @@ function App() {
 								expoElement.style.opacity = 0;
 								setTimeout(() => {
 									expoElement.style.display = "none";
+									backButtonElement.style.display = "block";
 								}, 1000);
 							}
 							if (wall.current && paint.current) {
@@ -161,6 +183,9 @@ function App() {
 
 			<div ref={wall} className="app__star">
 				<div className="app__star-container">
+					<div ref={backButton} className="app__star-container_controls">
+						<IoArrowBackCircleOutline />
+					</div>
 					<div className="app__star-container_artwork">
 						<div className="app__star-container_artwork-frame">
 							<img src={frame} alt="frame" />
